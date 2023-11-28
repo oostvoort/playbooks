@@ -10,6 +10,6 @@
         upgrade: 'yes'
 
     - name: Hold Docker package
-      apt:
+      ansible.builtin.dpkg_selections:
         name: docker-ce
-        state: hold
+        selection: hold

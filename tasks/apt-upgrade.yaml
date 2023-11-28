@@ -8,3 +8,8 @@
         update_cache: yes
         cache_valid_time: 3600 # One hour
         upgrade: 'yes'
+
+    - name: Hold Docker package
+      apt:
+        name: docker-ce
+        state: hold

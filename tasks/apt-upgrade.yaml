@@ -1,15 +1,13 @@
 ---
-- name: Update and upgrade apt packages
+- name: Update system while excluding Docker packages
   hosts: all
   become: true
   tasks:
-    - name: Update apt cache and upgrade packages
-      apt:
+    - name: Update and upgrade packages excluding Docker
+      ansible.builtin.apt:
         update_cache: yes
-        cache_valid_time: 3600 # One hour
-        upgrade: 'yes'
+        upgrade: 'safe'
+        name: '*'
+        state: latest
+        exclude: 'docker*,containerd*,docker-ce*'
 
-    - name: Hold Docker package
-      ansible.builtin.dpkg_selections:
-        name: docker-ce
-        selection: hold

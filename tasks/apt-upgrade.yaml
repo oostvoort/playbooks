@@ -3,11 +3,15 @@
   hosts: all
   become: true
   tasks:
-    - name: Update and upgrade packages excluding Docker
+    - name: Hold Docker packages
+      ansible.builtin.shell:
+        cmd: dpkg --get-selections | grep -E '^(docker|containerd|docker-ce)' | sed s/install/hold/ | dpkg --set-selections
+
+    - name: Update and upgrade packages
       ansible.builtin.apt:
         update_cache: yes
         upgrade: 'safe'
-        name: '*'
-        state: latest
-        exclude: 'docker*,containerd*,docker-ce*'
 
+    - name: Unhold Docker packages
+      ansible.builtin.shell:
+        cmd: dpkg --get-selections | grep -E '^(docker|containerd|docker-ce)' | sed s/hold/install/ | dpkg --set-selections
